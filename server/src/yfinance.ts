@@ -1,5 +1,5 @@
 import { httpGet } from './http';
-import { YFinanceAuth } from "./yfinance_i";
+import { DayQuote, YFinanceAuth } from "./yfinance_i";
 
 function encodeParams(params: { [key in string]: any }) {
     return Object.keys(params).map(k =>
@@ -33,7 +33,7 @@ export class YFinance {
             });
     }
 
-    static async fetchData(symbol: string) {
+    static async fetchData(symbol: string): Promise<DayQuote[]> {
         const { cookie, crumb } = await this.fetchAuth();
         const then = new Date().getTime() - 360 * 24 * 60 * 60 * 1000;
 
@@ -70,7 +70,6 @@ export class YFinance {
                         volume: +volume
                     };
                 });
-            })
-            .catch(e => console.error(`YFinance.fetchData(${symbol}) failed -`, e.message));
+            });
     }
 }

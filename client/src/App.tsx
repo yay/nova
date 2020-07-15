@@ -5,6 +5,7 @@ import './App.css';
 
 import { AutoComplete, Row, Col } from 'antd';
 import { Company } from "../../server/src/iex_i";
+import { DayQuote } from "../../server/src/yfinance_i";
 
 const { Option } = AutoComplete;
 
@@ -22,8 +23,8 @@ export const Complete: React.FC = () => {
     };
     const onSelect = async (data: string) => {
         console.log('onSelect', data);
-        // const quotes = await YFinance.fetchData(data);
-        // console.log(quotes);
+        const quotes: DayQuote[] = await fetch(`/api/history/${data}`).then(response => response.json());
+        console.log(quotes);
     };
     const onChange = (data: string) => {
         setValue(data.toUpperCase());
