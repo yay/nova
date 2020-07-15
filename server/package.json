@@ -1,0 +1,28 @@
+{
+  "name": "nova-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/app.js",
+  "scripts": {
+    "build-server": "tsc --watch",
+    "start-server": "node --max-old-space-size=8192 ./dist/app.js",
+    "watch-server": "ts-node-dev --respawn --transpile-only --no-notify ./src/app.ts",
+    "test-server": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vitalii Kravchenko",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/koa-static": "^4.0.1",
+    "ts-node-dev": "^1.0.0-pre.51",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "@types/koa-router": "^7.4.1",
+    "@types/node": "^14.0.23",
+    "apollo-server-koa": "^2.15.1",
+    "graphql": "^15.3.0",
+    "koa": "^2.13.0",
+    "koa-router": "^9.1.0",
+    "koa-static": "^5.0.0"
+  }
+}
