@@ -4,8 +4,8 @@ import 'antd/dist/antd.css';
 import './App.css';
 
 import { AutoComplete, Row, Col } from 'antd';
-import { Company } from "../../server/src/iex_i";
-import { DayQuote } from "../../server/src/yfinance_i";
+import { Company } from "../server/iex_i";
+import { DayQuote } from "../server/yfinance_i";
 
 const { Option } = AutoComplete;
 
@@ -23,7 +23,8 @@ export const Complete: React.FC = () => {
     };
     const onSelect = async (data: string) => {
         console.log('onSelect', data);
-        const quotes: DayQuote[] = await fetch(`/api/history/${data}`).then(response => response.json());
+        const quotes: DayQuote[] = await fetch(`/api/history/${data}`)
+            .then(response => response.json());
         console.log(quotes);
     };
     const onChange = (data: string) => {

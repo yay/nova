@@ -18,7 +18,7 @@
   },
   "scripts": {
     "setup-client": "node setup.mjs",
-    "start-client": "react-scripts start",
+    "watch-client": "react-scripts start",
     "build-client": "react-scripts build",
     "test-client": "react-scripts test",
     "eject-client": "react-scripts eject"
