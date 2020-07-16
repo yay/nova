@@ -4,8 +4,7 @@ import 'antd/dist/antd.css';
 import './App.css';
 
 import { AutoComplete, Row, Col } from 'antd';
-import { Company } from "../server/iex_i";
-import { DayQuote } from "../server/yfinance_i";
+import { Company, Quote } from "../../server/src/stock_i";
 
 const { Option } = AutoComplete;
 
@@ -14,18 +13,18 @@ async function completeSymbol(part: string, max = 10): Promise<Company[]> {
         .then(response => response.json());
 }
 
+// const quotes: OHLCV[] = await fetch(`/api/history/${data}`)
+//     .then(response => response.json());
+
 // https://ant.design/components/auto-complete/#components-auto-complete-demo-basic
-export const Complete: React.FC = () => {
+export const Complete: React.FC<{ onSelect?: Function }> = (props) => {
     const [value, setValue] = useState('');
     const [results, setResults] = useState<Company[]>([]);
     const onSearch = async (searchText: string) => {
         setResults(await completeSymbol(searchText));
     };
     const onSelect = async (data: string) => {
-        console.log('onSelect', data);
-        const quotes: DayQuote[] = await fetch(`/api/history/${data}`)
-            .then(response => response.json());
-        console.log(quotes);
+        props.onSelect?.(data);
     };
     const onChange = (data: string) => {
         setValue(data.toUpperCase());

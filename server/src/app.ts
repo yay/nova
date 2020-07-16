@@ -2,8 +2,7 @@ import Koa from 'koa';
 import KoaStatic from 'koa-static';
 import Router from 'koa-router';
 import { ApolloServer, gql } from "apollo-server-koa";
-import { Iex } from "./iex";
-import { YFinance } from "./yfinance";
+import { Stock } from "./stock";
 
 // https://create-react-app.dev/docs/proxying-api-requests-in-development/
 
@@ -28,13 +27,13 @@ const apiRouter = new Router({
 
 apiRouter
     .get('/symbols', async (ctx, next) => {
-        ctx.body = await Iex.getSymbols();
+        ctx.body = await Stock.getSymbols();
     })
     .get('/history/:symbol', async (ctx, next) => {
-        ctx.body = await YFinance.fetchData(ctx.params.symbol);
+        ctx.body = await Stock.fetchQuotes(ctx.params.symbol);
     })
     .get('/symbol/complete/:part/:max*', async (ctx) => {
-        ctx.body = await Iex.suggest(ctx.params.part, ctx.params.max | 10);
+        ctx.body = await Stock.suggest(ctx.params.part, ctx.params.max | 10);
     });
 // server.applyMiddleware({ app });
 //

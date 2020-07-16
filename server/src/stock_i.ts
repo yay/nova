@@ -3,12 +3,21 @@ export interface YFinanceAuth {
     crumb: string;
 }
 
-export interface DayQuote {
+export enum QuoteInterval {
+    Day = '1d'
+}
+
+export interface Quote {
     date: number;
     open: number;
     high: number;
     low: number;
     close: number;
-    adjClose: number;
     volume: number;
+    adjClose?: number;
+}
+
+export interface Company {
+    symbol: string;
+    name: string;
 }
