@@ -3,10 +3,11 @@ import logo from './logo.svg';
 import 'antd/dist/antd.css';
 import './App.css';
 
-import { AutoComplete, Row, Col } from 'antd';
+import { AutoComplete, Row, Col, List, Button } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { Company, Quote } from "../../server/src/stock_i";
 
-const { Option } = AutoComplete;
+const {Option} = AutoComplete;
 
 async function completeSymbol(part: string, max = 10): Promise<Company[]> {
     return fetch(`/api/symbol/complete/${part}/${max}`)
@@ -17,7 +18,7 @@ async function completeSymbol(part: string, max = 10): Promise<Company[]> {
 //     .then(response => response.json());
 
 // https://ant.design/components/auto-complete/#components-auto-complete-demo-basic
-export const Complete: React.FC<{ onSelect?: Function }> = (props) => {
+export const SymbolComplete: React.FC<{ onSelect?: Function }> = (props) => {
     const [value, setValue] = useState('');
     const [results, setResults] = useState<Company[]>([]);
     const onSearch = async (searchText: string) => {
@@ -29,53 +30,87 @@ export const Complete: React.FC<{ onSelect?: Function }> = (props) => {
     const onChange = (data: string) => {
         setValue(data.toUpperCase());
     };
+    const onKeyUp = async (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter') {
+            await onSelect(value);
+        }
+    };
+    return (
+        <AutoComplete
+            style={{width: '100%'}}
+            value={value}
+            onSelect={onSelect}
+            onSearch={onSearch}
+            onChange={onChange}
+            onKeyUp={onKeyUp}
+            placeholder="Company symbol"
+        >
+            {
+                results.map(company => (
+                    <Option key={company.symbol} value={company.symbol}>
+                        <div><strong>{company.symbol}</strong></div>
+                        <div style={{fontSize: '0.8em'}}>{company.name}</div>
+                    </Option>
+                ))
+            }
+        </AutoComplete>
+    );
+};
+
+export const Watchlist: React.FC<{}> = (props) => {
+    const [data, setData] = useState<Quote[]>([]);
+    const onSelect = async (symbol: string) => {
+        const data: Quote[] = await fetch(`/api/history/${symbol}`).then(response => response.json());
+        setData(data);
+    };
     return (
         <>
-            <Col style={{padding: '10px'}}>
-                <Row>
-                    <AutoComplete
-                        value={value}
-                        style={{ width: 200 }}
-                        onSelect={onSelect}
-                        onSearch={onSearch}
-                        onChange={onChange}
-                        placeholder="Company symbol"
-                    >
-                        {
-                            results.map(company => (
-                                <Option key={company.symbol} value={company.symbol}>
-                                    <div><strong>{company.symbol}</strong></div>
-                                    <div style={{fontSize: '0.8em'}}>{company.name}</div>
-                                </Option>
-                            ))
-                        }
-                    </AutoComplete>
-                </Row>
+            <Col
+                style={{width: '300px'}}
+            >
+                <SymbolComplete
+                    onSelect={onSelect}
+                />
+                <List
+                    bordered
+                    dataSource={data}
+                    renderItem={item => {
+                        return (
+                            <List.Item>
+                                <Row><span>{item.close}</span><Button shape="circle" icon={<SearchOutlined />} /></Row>
+                            </List.Item>
+                        )
+                    }}
+                />
             </Col>
         </>
     );
 };
 
 function App() {
-  return (
-    <div className="App">
-        <Complete />
-      {/*<header className="App-header">*/}
-      {/*  <img src={logo} className="App-logo" alt="logo" />*/}
-      {/*  <p>*/}
-      {/*    Edit <code>src/App.tsx</code> and save to reload.*/}
-      {/*  </p>*/}
-      {/*  <a*/}
-      {/*    className="App-link"*/}
-      {/*    href="https://reactjs.org"*/}
-      {/*    target="_blank"*/}
-      {/*    rel="noopener noreferrer"*/}
-      {/*  >*/}
-      {/*    Learn React*/}
-      {/*  </a>*/}
-      {/*</header>*/}
-    </div>
-  );
+    return (
+        <div className="App">
+            <Col style={{margin: '10px'}}>
+                <Row>
+                    <Watchlist/>
+                </Row>
+            </Col>
+            {/*<header className="App-header">*/}
+            {/*  <img src={logo} className="App-logo" alt="logo" />*/}
+            {/*  <p>*/}
+            {/*    Edit <code>src/App.tsx</code> and save to reload.*/}
+            {/*  </p>*/}
+            {/*  <a*/}
+            {/*    className="App-link"*/}
+            {/*    href="https://reactjs.org"*/}
+            {/*    target="_blank"*/}
+            {/*    rel="noopener noreferrer"*/}
+            {/*  >*/}
+            {/*    Learn React*/}
+            {/*  </a>*/}
+            {/*</header>*/}
+        </div>
+    );
 }
 
 export default App;

@@ -18,11 +18,9 @@
   },
   "dependencies": {
     "@types/koa-router": "^7.4.1",
-    "@types/node": "^14.0.23",
-    "apollo-server-koa": "^2.15.1",
-    "graphql": "^15.3.0",
+    "@types/node": "^14.11.10",
     "koa": "^2.13.0",
-    "koa-router": "^9.1.0",
+    "koa-router": "^9.4.0",
     "koa-static": "^5.0.0"
   }
 }
