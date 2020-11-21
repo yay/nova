@@ -1,29 +1,13 @@
 import Koa from 'koa';
 import KoaStatic from 'koa-static';
 import Router from 'koa-router';
-import { ApolloServer, gql } from "apollo-server-koa";
 import { Stock } from "./stock";
 
-// https://create-react-app.dev/docs/proxying-api-requests-in-development/
-
-// const typeDefs = gql`
-//   type Query {
-//     hello: String
-//   }
-// `;
-//
-// const resolvers = {
-//     Query: {
-//         hello: () => 'Hello world!',
-//     },
-// };
-//
-// const server = new ApolloServer({ typeDefs, resolvers });
-//
 const app = new Koa();
 const apiRouter = new Router({
     prefix: '/api'
 });
+const siteRouter = new Router();
 
 apiRouter
     .get('/symbols', async (ctx, next) => {
@@ -38,9 +22,24 @@ apiRouter
 // server.applyMiddleware({ app });
 //
 
+siteRouter
+    .get('/symbols', async (ctx, next) => {
+        const symbols = await Stock.getSymbols();
+        let body = symbols.map(s => {
+            return `<strong><a href="/symbol/${s.symbol}">${s.symbol}</a></strong>&nbsp;-&nbsp;${s.name}<br>`;
+        }).join('');
+        body = '<div style="font-family: sans-serif;">' + body + '</div>';
+        ctx.set('Content-Type', 'text/html');
+        ctx.body = body;
+    });
+
 app
     .use(apiRouter.routes())
     .use(apiRouter.allowedMethods());
+
+app
+    .use(siteRouter.routes())
+    .use(siteRouter.allowedMethods());
 
 app.listen({ port: 4000 }, () =>
     // console.log('Now browse to http://localhost:4000' + server.graphqlPath)

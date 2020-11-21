@@ -79,7 +79,7 @@ export const Watchlist: React.FC<{}> = (props) => {
                             <List.Item>
                                 <Row><span>{item.close}</span><Button shape="circle" icon={<SearchOutlined />} /></Row>
                             </List.Item>
-                        )
+                        );
                     }}
                 />
             </Col>
