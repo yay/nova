@@ -19,8 +19,6 @@ apiRouter
     .get('/symbol/complete/:part/:max*', async (ctx) => {
         ctx.body = await Stock.suggest(ctx.params.part, ctx.params.max | 10);
     });
-// server.applyMiddleware({ app });
-//
 
 siteRouter
     .get('/symbols', async (ctx, next) => {
@@ -41,10 +39,9 @@ app
     .use(siteRouter.routes())
     .use(siteRouter.allowedMethods());
 
-app.listen({ port: 4000 }, () =>
-    // console.log('Now browse to http://localhost:4000' + server.graphqlPath)
-    console.log('Server running at http://localhost:4000')
-);
+app.listen({ port: 4000 }, () => {
+    console.log('Server running at http://localhost:4000');
+});
 
 // async function run() {
 //     console.log(await Iex.suggest('aa'));
