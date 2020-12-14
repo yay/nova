@@ -5,15 +5,13 @@ export class CategoryAxis extends ChartAxis {
     static className = 'CategoryAxis';
     static type = 'category';
 
+    readonly scale: BandScale<string> = new BandScale<string>();
+
     constructor() {
-        const scale = new BandScale<string>();
-        scale.paddingInner = 0.2;
-        scale.paddingOuter = 0.3;
-
-        super(scale);
+        super(new BandScale<string>());
+        this.scale.paddingInner = 0.2;
+        this.scale.paddingOuter = 0.3;
     }
-
-    readonly scale!: BandScale<string>;
 
     set paddingInner(value: number) {
         this.scale.paddingInner = value;

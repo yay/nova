@@ -268,7 +268,7 @@ function thirdWalk(v: TreeNode) {
 }
 
 export function treeLayout(root: TreeNode): TreeLayout {
-    const layout = new TreeLayout;
+    const layout = new TreeLayout();
 
     firstWalk(root, 1);
     secondWalk(root, -root.prelim, layout);
@@ -278,7 +278,7 @@ export function treeLayout(root: TreeNode): TreeLayout {
 }
 
 export class TreeLayout {
-    dimensions = new Dimensions;
+    dimensions = new Dimensions();
     leafCount = 0;
     nodes: TreeNode[] = [];
     // One might want to process leaf nodes separately from the rest of the tree.

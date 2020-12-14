@@ -89,8 +89,8 @@ export class BarSeries extends CartesianSeries {
     // created after the bar nodes, this only guarantees that labels will always be on top of bars
     // on the first run. If on the next run more bars are added, they might clip the labels
     // rendered during the previous run.
-    private rectGroup = this.group.appendChild(new Group);
-    private textGroup = this.group.appendChild(new Group);
+    private rectGroup = this.group.appendChild(new Group());
+    private textGroup = this.group.appendChild(new Group());
 
     private rectSelection: Selection<Rect, Group, BarNodeDatum, any> = Selection.select(this.rectGroup).selectAll<Rect>();
     private textSelection: Selection<Text, Group, BarNodeDatum, any> = Selection.select(this.textGroup).selectAll<Text>();

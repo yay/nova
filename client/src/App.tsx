@@ -3,9 +3,10 @@ import logo from './logo.svg';
 import 'antd/dist/antd.css';
 import './App.css';
 
-import { AutoComplete, Row, Col, List, Button } from 'antd';
+import { AutoComplete, Row, Col, List, Button, Slider } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Company, Quote } from "../../server/src/stock_i";
+import { ReactChart } from './charts/react';
 
 const {Option} = AutoComplete;
 
@@ -93,6 +94,28 @@ function App() {
             <Col style={{margin: '10px'}}>
                 <Row>
                     <Watchlist/>
+                    <Col>
+                        <Slider min={0} max={100} value={50} style={{width: "500px"}} />
+                        <ReactChart options={{
+                            type: 'cartesian',
+                            container: document.body,
+                            autoSize: false,
+                            width: 500,
+                            height: 500,
+                            data: [{
+                                x: 'Jan',
+                                y: 10
+                            }, {
+                                x: 'Feb',
+                                y: 20
+                            }],
+                            series: [{
+                                type: 'column',
+                                xKey: 'x',
+                                yKeys: [['y']]
+                            }]
+                        }} />
+                    </Col>
                 </Row>
             </Col>
             {/*<header className="App-header">*/}
