@@ -151,6 +151,7 @@ export class PieSeries extends PolarSeries {
         this.label.addEventListener('change', this.scheduleLayout, this);
         this.label.addEventListener('dataChange', this.scheduleData, this);
         this.callout.addEventListener('change', this.scheduleLayout, this);
+        this.callout.colors = this.strokes;
 
         this.addPropertyListener('data', event => {
             if (event.value) {
@@ -400,14 +401,12 @@ export class PieSeries extends PolarSeries {
 
         const {
             fills, strokes, fillOpacity, strokeOpacity, strokeWidth,
-            outerRadiusOffset, innerRadiusOffset,
-            radiusScale, callout, shadow,
+            outerRadiusOffset, radiusScale, callout, shadow,
             highlightStyle: { fill, stroke, centerOffset },
             angleKey, radiusKey, formatter
         } = this;
         const { highlightedDatum } = this.chart;
 
-        const outerRadii: number[] = [];
         const centerOffsets: number[] = [];
         const innerRadius = radiusScale.convert(0);
 
@@ -448,7 +447,6 @@ export class PieSeries extends PolarSeries {
             sector.fillShadow = shadow;
             sector.lineJoin = 'round';
 
-            outerRadii.push(outerRadius);
             centerOffsets.push(sector.centerOffset);
         });
 
@@ -456,14 +454,14 @@ export class PieSeries extends PolarSeries {
 
         this.groupSelection.selectByTag<Line>(PieNodeTag.Callout).each((line, datum, index) => {
             if (datum.label) {
-                const outerRadius = centerOffsets[index] + outerRadii[index];
+                const radius = radiusScale.convert(datum.radius);
 
                 line.strokeWidth = calloutStrokeWidth;
                 line.stroke = calloutColors[index % calloutColors.length];
-                line.x1 = datum.midCos * outerRadius;
-                line.y1 = datum.midSin * outerRadius;
-                line.x2 = datum.midCos * (outerRadius + calloutLength);
-                line.y2 = datum.midSin * (outerRadius + calloutLength);
+                line.x1 = datum.midCos * radius;
+                line.y1 = datum.midSin * radius;
+                line.x2 = datum.midCos * (radius + calloutLength);
+                line.y2 = datum.midSin * (radius + calloutLength);
             } else {
                 line.stroke = undefined;
             }
@@ -476,8 +474,8 @@ export class PieSeries extends PolarSeries {
                 const label = datum.label;
 
                 if (label) {
-                    const outerRadius = outerRadii[index];
-                    const labelRadius = centerOffsets[index] + outerRadius + calloutLength + offset;
+                    const radius = radiusScale.convert(datum.radius);
+                    const labelRadius = centerOffsets[index] + radius + calloutLength + offset;
 
                     text.fontStyle = fontStyle;
                     text.fontWeight = fontWeight;
