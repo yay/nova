@@ -5,10 +5,8 @@ export class CategoryAxis extends ChartAxis {
     static className = 'CategoryAxis';
     static type = 'category';
 
-    readonly scale: BandScale<string> = new BandScale<string>();
-
-    constructor() {
-        super(new BandScale<string>());
+    constructor(public readonly scale: BandScale<string> = new BandScale<string>()) {
+        super(scale);
         this.scale.paddingInner = 0.2;
         this.scale.paddingOuter = 0.3;
     }

@@ -18,39 +18,33 @@ export class ReactChart extends Component<ChartProps, ChartState> {
 
     protected chartRef: RefObject<HTMLElement>;
 
-    constructor(public props: any) {
+    constructor(public props: ChartProps) {
         super(props);
         this.chartRef = createRef();
     }
 
     render() {
-        return createElement<any>('div', {
-            style: this.createStyleForDiv(),
+        return createElement('div', {
             ref: this.chartRef
         });
     }
 
-    createStyleForDiv() {
-        return {
-            height: "100%",
-            ...this.props.containerStyle
-        };
-    }
+    private layoutDone = true;
 
     componentDidMount() {
-        const options = this.applyContainerIfNotSet(this.props.options);
-        this.chart = ChartFactory.create(options);
+        this.chart = ChartFactory.create(this.setContainerIfNotSet(this.props.options));
+        this.chart.addEventListener('layoutDone', () => this.layoutDone = true);
     }
 
-    private applyContainerIfNotSet(propsOptions: any) {
-        if (propsOptions.container) {
-            return propsOptions;
+    private setContainerIfNotSet(chartOptions: ChartOptions) {
+        if (chartOptions.container) {
+            return chartOptions;
         }
 
-        return { ...propsOptions, container: this.chartRef.current };
+        return { ...chartOptions, container: this.chartRef.current };
     }
 
-    shouldComponentUpdate(nextProps: any) {
+    shouldComponentUpdate(nextProps: ChartProps) {
         this.processPropsChanges(this.props, nextProps);
 
         // We want full control of the DOM, as charts don't use React internally,
@@ -59,8 +53,11 @@ export class ReactChart extends Component<ChartProps, ChartState> {
         return false;
     }
 
-    processPropsChanges(prevProps: any, nextProps: any) {
-        ChartFactory.update(this.chart, this.applyContainerIfNotSet(nextProps.options));
+    processPropsChanges(prevProps: ChartProps, nextProps: ChartProps) {
+        if (this.layoutDone) {
+            ChartFactory.update(this.chart, this.setContainerIfNotSet(nextProps.options));
+            this.layoutDone = false;
+        }
     }
 
     componentWillUnmount() {

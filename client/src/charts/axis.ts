@@ -162,7 +162,6 @@ export class Axis<S extends Scale<D, number>, D = any> {
     private groupSelection: Selection<Group, Group, D, D>;
     private lineNode = new Line();
 
-    readonly scale: S;
     readonly group = new Group();
 
     readonly line: {
@@ -188,7 +187,7 @@ export class Axis<S extends Scale<D, number>, D = any> {
 
     getMeta(): any {}
 
-    constructor(scale: S) {
+    constructor(public readonly scale: S) {
         this.scale = scale;
         this.requestedRange = scale.range.slice();
         this.groupSelection = Selection.select(this.group).selectAll<Group>();

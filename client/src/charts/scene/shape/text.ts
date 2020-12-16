@@ -1,7 +1,7 @@
 import { Shape } from "./shape";
 import { chainObjects } from "../../util/object";
 import { BBox } from "../bbox";
-import { HdpiCanvas } from "../../canvas/hdpiCanvas";
+import { HdpiCanvas } from "../../hdpiCanvas";
 
 export type FontStyle = 'normal' | 'italic' | 'oblique';
 export type FontWeight = 'normal' | 'bold' | 'bolder' | 'lighter' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900';

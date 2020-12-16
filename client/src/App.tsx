@@ -89,19 +89,31 @@ export const Watchlist: React.FC<{}> = (props) => {
 };
 
 function App() {
+    const [width, setWidth] = useState(600);
+    const onChange = (value: number) => {
+        setWidth(value);
+    };
+    const [padding, setPadding] = useState(20);
+    const onPaddingChange = (value: number) => {
+        setPadding(value);
+    };
     return (
         <div className="App">
             <Col style={{margin: '10px'}}>
                 <Row>
                     <Watchlist/>
                     <Col>
-                        <Slider min={0} max={100} value={50} style={{width: "500px"}} />
+                        <Slider min={100} step={1} max={800} defaultValue={600} style={{ width: "500px" }} onChange={onChange} />
+                        <Slider min={0} step={1} max={200} defaultValue={padding} style={{ width: "500px" }} onChange={onPaddingChange} />
                         <ReactChart options={{
                             type: 'cartesian',
                             container: document.body,
+                            padding: {
+                                top: padding
+                            },
                             autoSize: false,
-                            width: 500,
-                            height: 500,
+                            width,
+                            height: 300,
                             data: [{
                                 x: 'Jan',
                                 y: 10
