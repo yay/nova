@@ -8,7 +8,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Company, Quote } from "../../server/src/stock_i";
 import { ReactChart } from './charts/react';
 
-const {Option} = AutoComplete;
+const { Option } = AutoComplete;
 
 async function completeSymbol(part: string, max = 10): Promise<Company[]> {
     return fetch(`/api/symbol/complete/${part}/${max}`)
@@ -38,7 +38,7 @@ export const SymbolComplete: React.FC<{ onSelect?: Function }> = (props) => {
     };
     return (
         <AutoComplete
-            style={{width: '100%'}}
+            style={{ width: '100%' }}
             value={value}
             onSelect={onSelect}
             onSearch={onSearch}
@@ -50,7 +50,7 @@ export const SymbolComplete: React.FC<{ onSelect?: Function }> = (props) => {
                 results.map(company => (
                     <Option key={company.symbol} value={company.symbol}>
                         <div><strong>{company.symbol}</strong></div>
-                        <div style={{fontSize: '0.8em'}}>{company.name}</div>
+                        <div style={{ fontSize: '0.8em' }}>{company.name}</div>
                     </Option>
                 ))
             }
@@ -67,12 +67,32 @@ export const Watchlist: React.FC<{}> = (props) => {
     return (
         <>
             <Col
-                style={{width: '300px'}}
+                style={{ width: '100%', height: '600px' }}
             >
                 <SymbolComplete
                     onSelect={onSelect}
                 />
-                <List
+                <ReactChart options={{
+                    type: 'cartesian',
+                    autoSize: false,
+                    data,
+                    axes: [{
+                        type: 'time',
+                        position: 'bottom'
+                    }, {
+                        type: 'number',
+                        position: 'left'
+                    }],
+                    series: [{
+                        type: 'line',
+                        xKey: 'date',
+                        yKey: 'close',
+                        marker: {
+                            enabled: false
+                        }
+                    }]
+                }} />
+                {/* <List
                     bordered
                     dataSource={data}
                     renderItem={item => {
@@ -82,7 +102,7 @@ export const Watchlist: React.FC<{}> = (props) => {
                             </List.Item>
                         );
                     }}
-                />
+                /> */}
             </Col>
         </>
     );
@@ -93,24 +113,20 @@ function App() {
     const onChange = (value: number) => {
         setWidth(value);
     };
-    const [padding, setPadding] = useState(20);
+    const [padding, setPadding] = useState(200);
     const onPaddingChange = (value: number) => {
         setPadding(value);
     };
     return (
         <div className="App">
-            <Col style={{margin: '10px'}}>
-                <Row>
-                    <Watchlist/>
+            <Col style={{ margin: '10px', width: '800px' }}>
+                <Row style={{ width: padding }}>
+                    <Watchlist />
                     <Col>
                         <Slider min={100} step={1} max={800} defaultValue={600} style={{ width: "500px" }} onChange={onChange} />
-                        <Slider min={0} step={1} max={200} defaultValue={padding} style={{ width: "500px" }} onChange={onPaddingChange} />
+                        <Slider min={0} step={1} max={600} defaultValue={padding} style={{ width: "500px" }} onChange={onPaddingChange} />
                         <ReactChart options={{
                             type: 'cartesian',
-                            container: document.body,
-                            padding: {
-                                top: padding
-                            },
                             autoSize: false,
                             width,
                             height: 300,
@@ -122,9 +138,9 @@ function App() {
                                 y: 20
                             }],
                             series: [{
-                                type: 'column',
+                                type: 'line',
                                 xKey: 'x',
-                                yKeys: [['y']]
+                                yKey: 'y'
                             }]
                         }} />
                     </Col>

@@ -46,7 +46,6 @@ export class ReactChart extends Component<ChartProps, ChartState> {
 
     shouldComponentUpdate(nextProps: ChartProps) {
         this.processPropsChanges(this.props, nextProps);
-
         // We want full control of the DOM, as charts don't use React internally,
         // so for performance reasons we tell React we don't need 'render' called
         // on property changes.
