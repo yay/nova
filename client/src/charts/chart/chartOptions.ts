@@ -1,6 +1,3 @@
-import { OHLCSeriesMarker } from "./series/cartesian/ohlc/ohlcSeries";
-import { ChartTheme } from "./themes/chartTheme";
-
 type FontStyle = 'normal' | 'italic' | 'oblique';
 type FontWeight = 'normal' | 'bold' | 'bolder' | 'lighter'
     | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900';
@@ -22,7 +19,7 @@ export interface ChartThemeOptions {
 }
 
 export interface DerivedChartThemeOptions extends ChartThemeOptions {
-    baseTheme?: ChartThemeName | ChartTheme;
+    baseTheme?: ChartThemeName; // or an actual theme
 }
 
 export interface ChartThemeOverrides {
@@ -183,7 +180,7 @@ interface BaseChartOptions {
     navigator?: NavigatorOptions;
     legend?: ChartLegendOptions;
     listeners?: { [key in string]: Function };
-    theme?: string | ChartTheme | DerivedChartThemeOptions;
+    theme?: string | DerivedChartThemeOptions; // or an actual theme
 }
 
 interface BaseAxisOptions {
@@ -371,9 +368,29 @@ export interface LineSeriesOptions extends BaseSeriesOptions {
     tooltip?: LineSeriesTooltip;
 }
 
+export interface OHLCTooltipRendererParams extends SeriesTooltipRendererParams {
+    dateKey?: string;
+    dateName?: string;
+
+    openKey?: string;
+    openName?: string;
+
+    highKey?: string;
+    highName?: string;
+
+    lowKey?: string;
+    lowName?: string;
+
+    closeKey?: string;
+    closeName?: string;
+}
+
+export interface OHLCSeriesTooltip extends SeriesTooltip {
+    renderer?: (params: OHLCTooltipRendererParams) => string | TooltipRendererResult;
+}
+
 export interface OHLCSeriesOptions extends BaseSeriesOptions {
     type: 'ohlc';
-    marker?: OHLCSeriesMarker;
     dateKey?: string;
     openKey?: string;
     highKey?: string;
@@ -384,6 +401,7 @@ export interface OHLCSeriesOptions extends BaseSeriesOptions {
         fill?: string;
         stroke?: string;
     };
+    tooltip?: OHLCSeriesTooltip;
 }
 
 export interface ScatterSeriesTooltip extends SeriesTooltip {

@@ -4,9 +4,9 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
+    "watch-server": "ts-node-dev --respawn --transpile-only --no-notify ./src/app.ts",
     "build-server": "tsc --watch",
     "start-server": "node --max-old-space-size=8192 ./dist/app.js",
-    "watch-server": "ts-node-dev --respawn --transpile-only --no-notify ./src/app.ts",
     "test-server": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Vitalii Kravchenko",

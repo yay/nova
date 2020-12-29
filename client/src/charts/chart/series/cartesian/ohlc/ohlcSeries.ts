@@ -1,6 +1,6 @@
 import { Selection } from "../../../../scene/selection";
 import { Group } from "../../../../scene/group";
-import { SeriesNodeDatum, TooltipRendererParams } from "../../series";
+import { SeriesNodeDatum, SeriesTooltip, TooltipRendererParams } from "../../series";
 import { numericExtent } from "../../../../util/array";
 import { toFixed } from "../../../../util/number";
 import { LegendDatum } from "../../../legend";
@@ -39,6 +39,10 @@ export interface OHLCTooltipRendererParams extends TooltipRendererParams {
 
     closeKey?: string;
     closeName?: string;
+}
+
+export class OHLCSeriesTooltip extends SeriesTooltip {
+    renderer?: (params: OHLCTooltipRendererParams) => string | TooltipRendererResult = property('renderer', undefined, this, 'change');
 }
 
 export class OHLCSeries extends CartesianSeries {
@@ -334,16 +338,17 @@ export class OHLCSeries extends CartesianSeries {
 
         const {
             title,
-            tooltipRenderer,
             dateName,
             openName,
             highName,
             lowName,
             closeName,
             labelKey,
-            labelName
+            labelName,
+            tooltip
         } = this;
 
+        const { renderer: tooltipRenderer } = tooltip;
         const color = nodeDatum.fill || 'gray';
 
         if (tooltipRenderer) {
@@ -387,7 +392,7 @@ export class OHLCSeries extends CartesianSeries {
         }
     }
 
-    tooltipRenderer?: (params: OHLCTooltipRendererParams) => string | TooltipRendererResult;
+    tooltip: OHLCSeriesTooltip = new OHLCSeriesTooltip();
 
     listSeriesItems(legendData: LegendDatum[]): void {
         const {
