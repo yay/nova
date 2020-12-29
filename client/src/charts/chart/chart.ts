@@ -10,7 +10,7 @@ import { BBox } from "../scene/bbox";
 import { find } from "../util/array";
 import { SizeMonitor } from "../util/sizeMonitor";
 import { Caption } from "../caption";
-import { Observable, reactive, PropertyChangeEvent, SourceEvent } from "../util/observable";
+import { Observable, PropertyChangeEvent, SourceEvent, property } from "../util/observable";
 import { ChartAxis, ChartAxisDirection } from "./chartAxis";
 import { CartesianSeries } from "./series/cartesian/cartesianSeries";
 import { createId } from "../util/id";
@@ -143,17 +143,17 @@ export class ChartTooltip extends Observable {
 
     private observer?: IntersectionObserver;
 
-    @reactive() enabled: boolean = true;
+    enabled = property('enabled', true, this);
 
-    @reactive() class: string = Chart.defaultTooltipClass;
+    class = property('class', Chart.defaultTooltipClass, this);
 
-    @reactive() delay: number = 0;
+    delay = property('delay', 0, this);
 
     /**
      * If `true`, the tooltip will be shown for the marker closest to the mouse cursor.
      * Only has effect on series with markers.
      */
-    @reactive() tracking: boolean = true;
+    tracking = property('tracking', true, this);
 
     isVisible(): boolean {
         const { element } = this;
@@ -370,9 +370,9 @@ export abstract class Chart extends Observable {
         this.scene.download(fileName);
     }
 
-    @reactive('layoutChange') padding = new Padding(20);
-    @reactive('layoutChange') title?: Caption;
-    @reactive('layoutChange') subtitle?: Caption;
+    padding = property('padding', new Padding(20), this, ['layoutChange']);
+    title?: Caption = property('title', undefined, this, ['layoutChange']);
+    subtitle?: Caption = property('subtitle', undefined, this, ['layoutChange']);
 
     private static tooltipDocuments: Document[] = [];
 

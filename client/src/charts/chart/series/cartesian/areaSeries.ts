@@ -18,7 +18,7 @@ import { TooltipRendererResult, toTooltipHtml } from "../../chart";
 import { findMinMax } from "../../../util/array";
 import { toFixed } from "../../../util/number";
 import { equal } from "../../../util/equal";
-import { reactive, TypedEvent } from "../../../util/observable";
+import { property, TypedEvent } from "../../../util/observable";
 import { interpolate } from "../../../util/string";
 
 interface AreaSelectionDatum {
@@ -47,8 +47,8 @@ interface MarkerSelectionDatum extends SeriesNodeDatum {
 }
 
 export class AreaSeriesTooltip extends SeriesTooltip {
-    @reactive('change') renderer?: (params: CartesianTooltipRendererParams) => string | TooltipRendererResult;
-    @reactive('change') format?: string;
+    renderer?: (params: CartesianTooltipRendererParams) => string | TooltipRendererResult = property('renderer', undefined, this, 'change');
+    format?: string = property('format', undefined, this, 'change');
 }
 
 export class AreaSeries extends CartesianSeries {
@@ -84,29 +84,29 @@ export class AreaSeries extends CartesianSeries {
 
     readonly marker = new CartesianSeriesMarker();
 
-    @reactive('dataChange') fills: string[] = [
+    fills = property('fills', [
         '#c16068',
         '#a2bf8a',
         '#ebcc87',
         '#80a0c3',
         '#b58dae',
         '#85c0d1'
-    ];
+    ], this, 'dataChange');
 
-    @reactive('dataChange') strokes: string[] = [
+    strokes = property('strokes', [
         '#874349',
         '#718661',
         '#a48f5f',
         '#5a7088',
         '#7f637a',
         '#5d8692'
-    ];
+    ], this, 'dataChange');
 
-    @reactive('update') fillOpacity = 1;
-    @reactive('update') strokeOpacity = 1;
+    fillOpacity = property('fillOpacity', 1, this, 'update');
+    strokeOpacity = property('strokeOpacity', 1, this, 'update');
 
-    @reactive('update') lineDash?: number[] = undefined;
-    @reactive('update') lineDashOffset: number = 0;
+    lineDash?: number[] = property('lineDash', undefined, this, 'update');
+    lineDashOffset = property('lineDashOffset', 0, this, 'update');
 
     constructor() {
         super();
@@ -139,7 +139,7 @@ export class AreaSeries extends CartesianSeries {
         return this._xKey;
     }
 
-    @reactive('update') xName: string = '';
+    xName = property('xName', '', this, 'update');
 
     protected _yKeys: string[] = [];
     set yKeys(values: string[]) {
@@ -164,7 +164,7 @@ export class AreaSeries extends CartesianSeries {
         this.strokes = strokes;
     }
 
-    @reactive('update') yNames: string[] = [];
+    yNames = property('yNames', [], this, 'update');
 
     private _normalizedTo?: number;
     set normalizedTo(value: number | undefined) {
@@ -180,8 +180,8 @@ export class AreaSeries extends CartesianSeries {
         return this._normalizedTo;
     }
 
-    @reactive('update') strokeWidth = 2;
-    @reactive('update') shadow?: DropShadow;
+    strokeWidth = property('strokeWidth', 2, this, 'update');
+    shadow?: DropShadow = property('shadow', undefined, this, 'update');
 
     highlightStyle: HighlightStyle = { fill: 'yellow' };
 

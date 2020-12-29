@@ -5,7 +5,7 @@ import { finiteExtent } from "../../../util/array";
 import { toFixed } from "../../../util/number";
 import { LegendDatum } from "../../legend";
 import { LinearScale } from "../../../scale/linearScale";
-import { reactive, TypedEvent } from "../../../util/observable";
+import { property, TypedEvent } from "../../../util/observable";
 import { CartesianSeries, CartesianSeriesMarker, CartesianSeriesMarkerFormat } from "./cartesianSeries";
 import { ChartAxisDirection } from "../../chartAxis";
 import { getMarker } from "../../marker/util";
@@ -39,7 +39,7 @@ export interface ScatterTooltipRendererParams extends CartesianTooltipRendererPa
 }
 
 export class ScatterSeriesTooltip extends SeriesTooltip {
-    @reactive('change') renderer?: (params: ScatterTooltipRendererParams) => string | TooltipRendererResult;
+    renderer?: (params: ScatterTooltipRendererParams) => string | TooltipRendererResult = property('renderer', undefined, this, 'change');
 }
 
 export class ScatterSeries extends CartesianSeries {
@@ -125,11 +125,11 @@ export class ScatterSeries extends CartesianSeries {
         this.updateNodes();
     }
 
-    @reactive('layoutChange') title?: string;
-    @reactive('dataChange') xKey: string = '';
-    @reactive('dataChange') yKey: string = '';
-    @reactive('dataChange') sizeKey?: string;
-    @reactive('dataChange') labelKey?: string;
+    title?: string = property('title', undefined, this, 'layoutChange');
+    xKey = property('xKey', '', this, 'dataChange');
+    yKey = property('yKey', '', this, 'dataChange');
+    sizeKey?: string = property('sizeKey', undefined, this, 'dataChange');
+    labelKey?: string = property('labelKey', undefined, this, 'dataChange');
 
     xName: string = '';
     yName: string = '';

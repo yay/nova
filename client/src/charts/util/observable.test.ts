@@ -1,19 +1,19 @@
-import { Observable, reactive } from "./observable";
+import { Observable, property } from "./observable";
 
 class SubComponent {
     foo: string = 'bar';
 }
 
 class Component extends Observable {
-    @reactive('name', 'misc') john = 'smith';
-    @reactive('name', 'misc') bob = 'marley';
-    @reactive('change') foo: string;
-    @reactive() arr: [] | undefined | null = [];
-    @reactive() obj: {} | undefined | null = {};
+    john = property('john', 'smith', this, ['name', 'misc']);
+    bob = property('bob', 'marley', this, ['name', 'misc']);
+    foo?: string = property('foo', undefined, this, 'change');
+    arr: [] | undefined | null = property('arr', [], this);
+    obj: {} | undefined | null = property('obj', {}, this);
 }
 
 class BaseClass extends Observable {
-    @reactive('layout') foo = 5;
+    foo = property('foo', 5, this, 'layout');
 
     layoutTriggered = false;
 
@@ -25,7 +25,7 @@ class BaseClass extends Observable {
 }
 
 class SubClass extends BaseClass {
-    @reactive('layout') bar = 10;
+    bar = property('bar', 10, this, 'layout');
 }
 
 test('reactive', async () => {
@@ -33,7 +33,7 @@ test('reactive', async () => {
 
     expect(c.john).toBe('smith');
 
-    const johnListenerPromise = new Promise((resolve, reject) => {
+    const johnListenerPromise = new Promise<void>((resolve, reject) => {
         c.addPropertyListener('john', event => {
             expect(event.type).toBe('john');
             expect(event.source).toBe(c);
@@ -43,7 +43,7 @@ test('reactive', async () => {
         });
     });
 
-    const nameCategoryListenerPromise = new Promise((resolve, reject) => {
+    const nameCategoryListenerPromise = new Promise<void>((resolve, reject) => {
         c.addEventListener('name', event => {
             expect(event.type).toBe('name');
             resolve();
@@ -116,7 +116,7 @@ test('addEventListener', () => {
 
     let eventSource: any;
     let listener1Scope: any;
-    expect(c.addEventListener('name', function (event) {
+    expect(c.addEventListener('name', function (this: any, event) {
         eventSource = event.source;
         listener1Scope = this;
         sum += 1;
@@ -124,7 +124,7 @@ test('addEventListener', () => {
 
     const that = {};
     let listener2Scope: any;
-    c.addEventListener('name', function (event) {
+    c.addEventListener('name', function (this: any, event) {
         listener2Scope = this;
     }, that);
 
@@ -198,7 +198,7 @@ test('removeEventListener', () => {
     expect(sum).toBe(0);
 
     let scopeSum = 0;
-    function listener4() {
+    function listener4(this: any) {
         scopeSum += this.$value || 1;
     }
 

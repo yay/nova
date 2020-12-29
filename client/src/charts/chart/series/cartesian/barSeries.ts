@@ -18,7 +18,7 @@ import { TooltipRendererResult, toTooltipHtml } from "../../chart";
 import { findMinMax } from "../../../util/array";
 import { toFixed } from "../../../util/number";
 import { equal } from "../../../util/equal";
-import { reactive, TypedEvent } from "../../../util/observable";
+import { property, TypedEvent } from "../../../util/observable";
 
 export interface BarSeriesNodeClickEvent extends TypedEvent {
     readonly type: 'nodeClick';
@@ -57,7 +57,7 @@ enum BarSeriesNodeTag {
 }
 
 class BarSeriesLabel extends Label {
-    @reactive('change') formatter?: (params: { value: number }) => string;
+    formatter?: (params: { value: number }) => string = property('formatter', undefined, this, 'change');
 }
 
 export interface BarSeriesFormatterParams {
@@ -77,7 +77,7 @@ export interface BarSeriesFormat {
 }
 
 export class BarSeriesTooltip extends SeriesTooltip {
-    @reactive('change') renderer?: (params: CartesianTooltipRendererParams) => string | TooltipRendererResult;
+    renderer?: (params: CartesianTooltipRendererParams) => string | TooltipRendererResult = property('renderer', undefined, this, 'change');
 }
 
 export class BarSeries extends CartesianSeries {
@@ -109,33 +109,33 @@ export class BarSeries extends CartesianSeries {
 
     tooltip: BarSeriesTooltip = new BarSeriesTooltip();
 
-    @reactive('layoutChange') flipXY = false;
+    flipXY = property('flipXY', false, this, 'layoutChange');
 
-    @reactive('dataChange') fills: string[] = [
+    fills = property('fills', [
         '#c16068',
         '#a2bf8a',
         '#ebcc87',
         '#80a0c3',
         '#b58dae',
         '#85c0d1'
-    ];
+    ], this, 'dataChange');
 
-    @reactive('dataChange') strokes: string[] = [
+    strokes = property('strokes', [
         '#874349',
         '#718661',
         '#a48f5f',
         '#5a7088',
         '#7f637a',
         '#5d8692'
-    ];
+    ], this, 'dataChange');
 
-    @reactive('layoutChange') fillOpacity = 1;
-    @reactive('layoutChange') strokeOpacity = 1;
+    fillOpacity = property('fillOpacity', 1, this, 'layoutChange');
+    strokeOpacity = property('strokeOpacity', 1, this, 'layoutChange');
 
-    @reactive('update') lineDash?: number[] = undefined;
-    @reactive('update') lineDashOffset: number = 0;
+    lineDash?: number[] = property('lineDash', undefined, this, 'update');
+    lineDashOffset = property('lineDashOffset', 0, this, 'update');
 
-    @reactive('update') formatter?: (params: BarSeriesFormatterParams) => BarSeriesFormat;
+    formatter?: (params: BarSeriesFormatterParams) => BarSeriesFormat = property('formatter', undefined, this, 'update');
 
     constructor() {
         super();
@@ -206,7 +206,7 @@ export class BarSeries extends CartesianSeries {
     private cumYKeyCount: number[] = [];
     private flatYKeys: string[] | undefined = undefined; // only set when a user used a flat array for yKeys
 
-    @reactive('layoutChange') hideInLegend: string[] = [];
+    hideInLegend: string[] = property('hideInLegend', [], this, 'layoutChange');
 
     /**
      * yKeys: [['coffee']] - regular bars, each category has a single bar that shows a value for coffee

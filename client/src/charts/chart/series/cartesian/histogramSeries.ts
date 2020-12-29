@@ -16,7 +16,7 @@ import { ChartAxisDirection } from "../../chartAxis";
 import { TooltipRendererResult, toTooltipHtml } from "../../chart";
 import { numericExtent, finiteExtent } from "../../../util/array";
 import { toFixed } from "../../../util/number";
-import { reactive, TypedEvent } from "../../../util/observable";
+import { property, TypedEvent } from "../../../util/observable";
 import ticks, { tickStep } from "../../../util/ticks";
 
 enum HistogramSeriesNodeTag {
@@ -25,7 +25,7 @@ enum HistogramSeriesNodeTag {
 }
 
 class HistogramSeriesLabel extends Label {
-    @reactive('change') formatter?: (params: { value: number }) => string;
+    formatter?: (params: { value: number }) => string = property('formatter', undefined, this, 'change');
 }
 
 const defaultBinCount = 10;
@@ -108,7 +108,7 @@ export class HistogramBin {
 }
 
 export class HistogramSeriesTooltip extends SeriesTooltip {
-    @reactive('change') renderer?: (params: CartesianTooltipRendererParams) => string | TooltipRendererResult;
+    renderer?: (params: CartesianTooltipRendererParams) => string | TooltipRendererResult = property('renderer', undefined, this, 'change');
 }
 
 export class HistogramSeries extends CartesianSeries {
@@ -136,14 +136,14 @@ export class HistogramSeries extends CartesianSeries {
 
     tooltip: HistogramSeriesTooltip = new HistogramSeriesTooltip();
 
-    @reactive('dataChange') fill: string | undefined = undefined;
-    @reactive('dataChange') stroke: string | undefined = undefined;
+    fill?: string = property('fill', undefined, this, 'dataChange');
+    stroke?: string = property('stroke', undefined, this, 'dataChange');
 
-    @reactive('layoutChange') fillOpacity = 1;
-    @reactive('layoutChange') strokeOpacity = 1;
+    fillOpacity = property('fillOpacity', 1, this, 'layoutChange');
+    strokeOpacity = property('strokeOpacity', 1, this, 'layoutChange');
 
-    @reactive('update') lineDash?: number[] = undefined;
-    @reactive('update') lineDashOffset: number = 0;
+    lineDash?: number[] = property('lineDash', undefined, this, 'update');
+    lineDashOffset = property('lineDashOffset', 0, this, 'update');
 
     constructor() {
         super();

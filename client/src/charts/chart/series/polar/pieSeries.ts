@@ -13,7 +13,7 @@ import { Color } from "../../../util/color";
 import { toFixed } from "../../../util/number";
 import { LegendDatum } from "../../legend";
 import { Caption } from "../../../caption";
-import { reactive, Observable, TypedEvent } from "../../../util/observable";
+import { Observable, property, TypedEvent } from "../../../util/observable";
 import { PolarSeries } from "./polarSeries";
 import { ChartAxisDirection } from "../../chartAxis";
 import { TooltipRendererResult, toTooltipHtml } from "../../chart";
@@ -76,18 +76,18 @@ export interface PieSeriesFormat {
 }
 
 class PieSeriesLabel extends Label {
-    @reactive('change') offset = 3; // from the callout line
-    @reactive('dataChange') minAngle = 20; // in degrees
+    offset = property('offset', 3, this, 'change'); // from the callout line
+    minAngle = property('minAngle', 20, this, 'dataChange'); // in degrees
 }
 
 class PieSeriesCallout extends Observable {
-    @reactive('change') colors: string[] = [];
-    @reactive('change') length: number = 10;
-    @reactive('change') strokeWidth: number = 1;
+    colors: string[] = property('colors', [], this, 'change');
+    length = property('length', 10, this, 'change');
+    strokeWidth = property('strokeWidth', 1, this, 'change');
 }
 
 export class PieSeriesTooltip extends SeriesTooltip {
-    @reactive('change') renderer?: (params: PieTooltipRendererParams) => string | TooltipRendererResult;
+    renderer?: (params: PieTooltipRendererParams) => string | TooltipRendererResult = property('renderer', undefined, this, 'change');
 }
 
 export class PieSeries extends PolarSeries {
@@ -164,21 +164,21 @@ export class PieSeries extends PolarSeries {
      * The key of the numeric field to use to determine the angle (for example,
      * a pie slice angle).
      */
-    @reactive('dataChange') angleKey = '';
-    @reactive('update') angleName = '';
+    angleKey = property('angleKey', '', this, 'dataChange');
+    angleName = property('angleName', '', this, 'update');
 
     /**
      * The key of the numeric field to use to determine the radii of pie slices.
      * The largest value will correspond to the full radius and smaller values to
      * proportionally smaller radii.
      */
-    @reactive('dataChange') radiusKey?: string;
-    @reactive('update') radiusName?: string;
-    @reactive('dataChange') radiusMin?: number;
-    @reactive('dataChange') radiusMax?: number;
+    radiusKey?: string = property('radiusKey', undefined, this, 'dataChange');
+    radiusName?: string = property('radiusName', undefined, this, 'update');
+    radiusMin?: number = property('radiusMin', undefined, this, 'dataChange');
+    radiusMax?: number = property('radiusMax', undefined, this, 'dataChange');
 
-    @reactive('dataChange') labelKey?: string;
-    @reactive('update') labelName?: string;
+    labelKey?: string = property('labelKey', undefined, this, 'dataChange');
+    labelName?: string = property('labelName', undefined, this, 'update');
 
     private _fills: string[] = [
         '#c16068',
@@ -214,26 +214,26 @@ export class PieSeries extends PolarSeries {
         return this._strokes;
     }
 
-    @reactive('layoutChange') fillOpacity = 1;
-    @reactive('layoutChange') strokeOpacity = 1;
+    fillOpacity = property('fillOpacity', 1, this, 'layoutChange');
+    strokeOpacity = property('strokeOpacity', 1, this, 'layoutChange');
 
-    @reactive('update') lineDash?: number[] = undefined;
-    @reactive('update') lineDashOffset: number = 0;
+    lineDash?: number[] = property('lineDash', undefined, this, 'update');
+    lineDashOffset = property('lineDashOffset', 0, this, 'update');
 
-    @reactive('update') formatter?: (params: PieSeriesFormatterParams) => PieSeriesFormat;
+    formatter?: (params: PieSeriesFormatterParams) => PieSeriesFormat = property('formatter', undefined, this, 'update');
 
     /**
      * The series rotation in degrees.
      */
-    @reactive('dataChange') rotation = 0;
+    rotation = property('rotation', 0, this, 'dataChange');
 
-    @reactive('layoutChange') outerRadiusOffset = 0;
+    outerRadiusOffset = property('outerRadiusOffset', 0, this, 'layoutChange');
 
-    @reactive('dataChange') innerRadiusOffset = 0;
+    innerRadiusOffset = property('innerRadiusOffset', 0, this, 'dataChange');
 
-    @reactive('layoutChange') strokeWidth = 1;
+    strokeWidth = property('strokeWidth', 1, this, 'layoutChange');
 
-    @reactive('layoutChange') shadow?: DropShadow;
+    shadow?: DropShadow = property('shadow', undefined, this, 'layoutChange');
 
     highlightStyle: PieHighlightStyle = { fill: 'yellow' };
 

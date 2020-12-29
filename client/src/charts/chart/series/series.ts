@@ -1,6 +1,6 @@
 import { Group } from "../../scene/group";
 import { LegendDatum } from "../legend";
-import { Observable, reactive } from "../../util/observable";
+import { Observable, property } from "../../util/observable";
 import { ChartAxis, ChartAxisDirection } from "../chartAxis";
 import { Chart } from "../chart";
 import { createId } from "../../util/id";
@@ -55,7 +55,7 @@ export interface HighlightStyle {
 }
 
 export class SeriesTooltip extends Observable {
-    @reactive('change') enabled = true;
+    enabled = property('enabled', true, this, 'change');
 }
 
 export abstract class Series extends Observable {
@@ -83,9 +83,9 @@ export abstract class Series extends Observable {
 
     setColors(fills: string[], strokes: string[]) {}
 
-    @reactive('dataChange') data?: any[] = undefined;
-    @reactive('dataChange') visible = true;
-    @reactive('layoutChange') showInLegend = true;
+    data?: any[] = property('data', undefined, this, 'dataChange');
+    visible = property('visible', true, this, 'dataChanged');
+    showInLegend = property('showInLegend', true, this, 'layoutChange');
 
     /**
      * Returns the actual keys used (to fetch the values from `data` items) for the given direction.

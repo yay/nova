@@ -1,9 +1,9 @@
-import { Observable, reactive } from "../util/observable";
+import { Observable, property } from "../util/observable";
 
 export class DropShadow extends Observable {
-    @reactive('change') enabled = true;
-    @reactive('change') color = 'rgba(0, 0, 0, 0.5)';
-    @reactive('change') xOffset = 0;
-    @reactive('change') yOffset = 0;
-    @reactive('change') blur = 5;
+    enabled = property('enabled', true, this, 'change');
+    color = property('color', 'rgba(0, 0, 0, 0.5)', this, 'change');
+    xOffset = property('xOffset', 0, this, 'change');
+    yOffset = property('yOffset', 0, this, 'change');
+    blur = property('blur', 5, this, 'change');
 }

@@ -14,7 +14,7 @@ import { LegendDatum } from "../../legend";
 import { CartesianSeries, CartesianSeriesMarker, CartesianSeriesMarkerFormat } from "./cartesianSeries";
 import { ChartAxisDirection } from "../../chartAxis";
 import { getMarker } from "../../marker/util";
-import { reactive, PropertyChangeEvent, TypedEvent } from "../../../util/observable";
+import { property, PropertyChangeEvent, TypedEvent } from "../../../util/observable";
 import { TooltipRendererResult, toTooltipHtml } from "../../chart";
 import Scale from "../../../scale/scale";
 import { interpolate } from "../../../util/string";
@@ -36,8 +36,8 @@ export interface LineSeriesNodeClickEvent extends TypedEvent {
 }
 
 export class LineSeriesTooltip extends SeriesTooltip {
-    @reactive('change') renderer?: (params: CartesianTooltipRendererParams) => string | TooltipRendererResult;
-    @reactive('change') format?: string;
+    renderer?: (params: CartesianTooltipRendererParams) => string | TooltipRendererResult = property('renderer', undefined, this, 'change');
+    format?: string = property('format', undefined, this, 'change');
 }
 
 export class LineSeries extends CartesianSeries {
@@ -59,13 +59,13 @@ export class LineSeries extends CartesianSeries {
 
     readonly marker = new CartesianSeriesMarker();
 
-    @reactive('layoutChange') title?: string;
+    title?: string = property('title', undefined, this, 'layoutChange');
 
-    @reactive('update') stroke?: string = '#874349';
-    @reactive('update') lineDash?: number[] = undefined;
-    @reactive('update') lineDashOffset: number = 0;
-    @reactive('update') strokeWidth: number = 2;
-    @reactive('update') strokeOpacity: number = 1;
+    stroke?: string = property('stroke', '#874349', this, 'update');
+    lineDash?: number[] = property('lineDash', undefined, this, 'update');
+    lineDashOffset = property('lineDashOffset', 0, this, 'update');
+    strokeWidth = property('strokeWidth', 2, this, 'update');
+    strokeOpacity = property('strokeOpacity', 1, this, 'update');
 
     tooltip: LineSeriesTooltip = new LineSeriesTooltip();
 
@@ -122,7 +122,7 @@ export class LineSeries extends CartesianSeries {
         return this._xKey;
     }
 
-    @reactive('update') xName: string = '';
+    xName = property('xName', '', this, 'update');
 
     protected _yKey: string = '';
     set yKey(value: string) {
@@ -137,7 +137,7 @@ export class LineSeries extends CartesianSeries {
         return this._yKey;
     }
 
-    @reactive('update') yName: string = '';
+    yName = property('yName', '', this, 'update');
 
     processData(): boolean {
         const { xAxis, yAxis, xKey, yKey, xData, yData } = this;

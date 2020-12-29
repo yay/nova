@@ -1,11 +1,11 @@
 import { FontStyle, FontWeight } from "../scene/shape/text";
-import { Observable, reactive } from "../util/observable";
+import { Observable, property } from "../util/observable";
 
 export class Label extends Observable {
-    @reactive('change', 'dataChange') enabled = true;
-    @reactive('change') fontStyle?: FontStyle;
-    @reactive('change') fontWeight?: FontWeight;
-    @reactive('change') fontSize = 12;
-    @reactive('change') fontFamily = 'Verdana, sans-serif';
-    @reactive('change') color = 'rgba(70, 70, 70, 1)';
+    enabled = property('enabled', true, this, ['change']);
+    fontStyle?: FontStyle = property('fontStyle', undefined, this, ['change']);
+    fontWeight?: FontWeight = property('fontWeight', undefined, this, ['change']);
+    fontSize = property('fontSize', 12, this, ['change']);
+    fontFamily = property('fontFamily', 'Verdana, sans-serif', this, ['change']);
+    color = property('color', 'rgba(70, 70, 70, 1)', this, ['change']);
 }

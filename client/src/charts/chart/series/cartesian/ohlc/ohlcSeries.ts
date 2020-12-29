@@ -8,7 +8,7 @@ import { OHLC } from "./marker/ohlc";
 import { Candlestick } from "./marker/candlestick";
 import { locale } from "../../../../util/time/format/defaultLocale";
 import { CartesianSeries } from "../cartesianSeries";
-import { reactive, Observable } from "../../../../util/observable";
+import { Observable, property } from "../../../../util/observable";
 import { ChartAxisDirection } from "../../../chartAxis";
 import {Chart, TooltipRendererResult, toTooltipHtml} from "../../../chart";
 
@@ -90,7 +90,7 @@ export class OHLCSeries extends CartesianSeries {
         this.update();
     }
 
-    @reactive('layoutChange') title?: string;
+    title?: string = property('title', undefined, this, 'layoutChange');
 
     protected _dateKey: string = 'date';
     set dateKey(value: string) {
@@ -418,18 +418,17 @@ export class OHLCSeriesMarker extends Observable {
     /**
      * Marker constructor function. A series will create one marker instance per data point.
      */
-    @reactive() type: new () => OHLC = Candlestick;
+    type: new () => OHLC = property('type', Candlestick, this);
 
-    @reactive('styleChange') upFill?: string = '#33ae5b';
-    @reactive('styleChange') downFill?: string = '#ff4734';
-    @reactive('styleChange') noChangeFill?: string = '#b9bdc5';
+    upFill?: string = property('upFill', '#33ae5b', this, 'styleChange');
+    downFill?: string = property('downFill', '#ff4734', this, 'styleChange');
+    noChangeFill?: string = property('noChangeFill', '#b9bdc5', this, 'styleChange');
 
-    @reactive('styleChange') upStroke?: string = 'black';
-    @reactive('styleChange') downStroke?: string = 'black';
-    @reactive('styleChange') noChangeStroke?: string = 'black';
+    upStroke?: string = property('upStroke', '#black', this, 'styleChange');
+    downStroke?: string = property('downStroke', '#black', this, 'styleChange');
+    noChangeStroke?: string = property('noChangeStroke', '#black', this, 'styleChange');
 
-
-    @reactive('styleChange') strokeWidth = 1;
-    @reactive('styleChange') fillOpacity = 1;
-    @reactive('styleChange') strokeOpacity = 1;
+    strokeWidth = property('strokeWidth', 1, this, 'styleChange');
+    fillOpacity = property('fillOpacity', 1, this, 'styleChange');
+    strokeOpacity = property('strokeOpacity', 1, this, 'styleChange');
 }

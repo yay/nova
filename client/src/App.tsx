@@ -4,7 +4,6 @@ import 'antd/dist/antd.css';
 import './App.css';
 
 import { AutoComplete, Row, Col, List, Button, Slider } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import { Company, Quote } from "../../server/src/stock_i";
 import { ReactChart } from './charts/react';
 
@@ -26,7 +25,7 @@ export const SymbolComplete: React.FC<{ onSelect?: Function }> = (props) => {
         setResults(await completeSymbol(searchText));
     };
     const onSelect = async (data: string) => {
-        props.onSelect?.(data);
+        props.onSelect && props.onSelect(data);
     };
     const onChange = (data: string) => {
         setValue(data.toUpperCase());
@@ -60,21 +59,33 @@ export const SymbolComplete: React.FC<{ onSelect?: Function }> = (props) => {
 
 export const Watchlist: React.FC<{}> = (props) => {
     const [data, setData] = useState<Quote[]>([]);
+    const [width, setWidth] = useState(600);
     const onSelect = async (symbol: string) => {
         const data: Quote[] = await fetch(`/api/history/${symbol}`).then(response => response.json());
         setData(data);
     };
+    function onWidthChange(value: number) {
+        setWidth(value);
+    }
+    function onClick() {
+
+    }
     return (
         <>
             <Col
                 style={{ width: '100%', height: '600px' }}
             >
-                <SymbolComplete
-                    onSelect={onSelect}
-                />
+                <Row>
+                    <SymbolComplete
+                        onSelect={onSelect}
+                    />
+                    <Button type="primary" onClick={onClick}>Click Me</Button>
+                </Row>
+                <Slider min={0} step={1} max={600} defaultValue={width} style={{ width: "500px" }} onChange={onWidthChange} />
                 <ReactChart options={{
                     type: 'cartesian',
                     autoSize: false,
+                    width,
                     data,
                     axes: [{
                         type: 'time',
@@ -92,17 +103,17 @@ export const Watchlist: React.FC<{}> = (props) => {
                         }
                     }]
                 }} />
-                {/* <List
+                <List
                     bordered
                     dataSource={data}
                     renderItem={item => {
                         return (
                             <List.Item>
-                                <Row><span>{item.close}</span><Button shape="circle" icon={<SearchOutlined />} /></Row>
+                                <Row><span>{item.close}</span></Row>
                             </List.Item>
                         );
                     }}
-                /> */}
+                />
             </Col>
         </>
     );
@@ -123,9 +134,9 @@ function App() {
                 <Row style={{ width: padding }}>
                     <Watchlist />
                     <Col>
-                        <Slider min={100} step={1} max={800} defaultValue={600} style={{ width: "500px" }} onChange={onChange} />
+                        {/* <Slider min={100} step={1} max={800} defaultValue={600} style={{ width: "500px" }} onChange={onChange} /> */}
                         <Slider min={0} step={1} max={600} defaultValue={padding} style={{ width: "500px" }} onChange={onPaddingChange} />
-                        <ReactChart options={{
+                        {/* <ReactChart options={{
                             type: 'cartesian',
                             autoSize: false,
                             width,
@@ -142,7 +153,7 @@ function App() {
                                 xKey: 'x',
                                 yKey: 'y'
                             }]
-                        }} />
+                        }} /> */}
                     </Col>
                 </Row>
             </Col>
