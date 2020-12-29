@@ -1,3 +1,4 @@
+import { OHLCSeriesMarker } from "./series/cartesian/ohlc/ohlcSeries";
 import { ChartTheme } from "./themes/chartTheme";
 
 type FontStyle = 'normal' | 'italic' | 'oblique';
@@ -368,6 +369,21 @@ export interface LineSeriesOptions extends BaseSeriesOptions {
         stroke?: string;
     };
     tooltip?: LineSeriesTooltip;
+}
+
+export interface OHLCSeriesOptions extends BaseSeriesOptions {
+    type: 'ohlc';
+    marker?: OHLCSeriesMarker;
+    dateKey?: string;
+    openKey?: string;
+    highKey?: string;
+    lowKey?: string;
+    closeKey?: string;
+    labelKey?: string;
+    highlightStyle?: {
+        fill?: string;
+        stroke?: string;
+    };
 }
 
 export interface ScatterSeriesTooltip extends SeriesTooltip {

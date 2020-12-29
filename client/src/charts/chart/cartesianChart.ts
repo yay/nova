@@ -91,7 +91,7 @@ export class CartesianChart extends Chart {
         let bottomAxesHeight = 0;
 
         axes.forEach(axis => {
-            axis.group.visible = true;
+            axis.group.visible = axis.boundSeries.some(series => series.data && series.data.length > 0);
             const axisThickness = Math.floor(axis.computeBBox().width);
             switch (axis.position) {
                 case ChartAxisPosition.Top:

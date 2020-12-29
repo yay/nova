@@ -59,7 +59,7 @@ export const SymbolComplete: React.FC<{ onSelect?: Function }> = (props) => {
 
 export const Watchlist: React.FC<{}> = (props) => {
     const [data, setData] = useState<Quote[]>([]);
-    const [width, setWidth] = useState(600);
+    const [width, setWidth] = useState(900);
     const onSelect = async (symbol: string) => {
         const data: Quote[] = await fetch(`/api/history/${symbol}`).then(response => response.json());
         setData(data);
@@ -79,7 +79,7 @@ export const Watchlist: React.FC<{}> = (props) => {
                     <SymbolComplete
                         onSelect={onSelect}
                     />
-                    <Button type="primary" onClick={onClick}>Click Me</Button>
+                    {/* <Button type="primary" onClick={onClick}>Click Me</Button> */}
                 </Row>
                 <Slider min={0} step={1} max={600} defaultValue={width} style={{ width: "500px" }} onChange={onWidthChange} />
                 <ReactChart options={{
@@ -89,7 +89,10 @@ export const Watchlist: React.FC<{}> = (props) => {
                     data,
                     axes: [{
                         type: 'time',
-                        position: 'bottom'
+                        position: 'bottom',
+                        label: {
+                            rotation: 45
+                        }
                     }, {
                         type: 'number',
                         position: 'left'
