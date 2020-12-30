@@ -21,6 +21,7 @@ import { NavigatorMask } from "./navigator/navigatorMask";
 import { NavigatorHandle } from "./navigator/navigatorHandle";
 import { CartesianSeriesMarker } from "./series/cartesian/cartesianSeries";
 import { Chart } from "./chart";
+import { OHLCSeries, OHLCSeriesTooltip } from "./series/cartesian/ohlc/ohlcSeries";
 
 /*
     This file defines the specs for creating different kinds of charts, but
@@ -490,6 +491,45 @@ const mappings: any = {
                     }
                 }
             },
+            [OHLCSeries.type]: {
+                meta: {
+                    constructor: OHLCSeries,
+                    defaults: {
+                        ...seriesDefaults,
+                        title: undefined,
+                        dateKey: 'date',
+                        openKey: 'open',
+                        highKey: 'high',
+                        lowKey: 'low',
+                        closeKey: 'close',
+                        labelKey: undefined,
+                        dateName: 'Date',
+                        openName: 'Open',
+                        highName: 'High',
+                        lowName: 'Low',
+                        closeName: 'Close',
+                        labelName: 'Label',
+                        highlightStyle: {
+                            fill: 'yellow'
+                        }
+                    }
+                },
+                ...tooltipMapping,
+                highlightStyle: {},
+                marker: {
+                    meta: {
+                        constructor: CartesianSeriesMarker,
+                        defaults: {
+                            enabled: true,
+                            shape: 'circle',
+                            size: 6,
+                            maxSize: 30,
+                            strokeWidth: 1,
+                            formatter: undefined
+                        }
+                    }
+                }
+            },
             [AreaSeries.type]: {
                 meta: {
                     constructor: AreaSeries,
@@ -717,8 +757,13 @@ const mappings: any = {
 // Amend the `mappings` object with aliases for different chart types.
 {
     const typeToAliases: { [key in string]: string[] } = {
-        cartesian: ['line', 'area', 'bar', 'column'],
-        polar: ['pie']
+        cartesian: [
+            LineSeries.type,
+            AreaSeries.type,
+            BarSeries.type, 'column',
+            OHLCSeries.type
+        ],
+        polar: [PieSeries.type]
     };
     for (const type in typeToAliases) {
         typeToAliases[type].forEach(alias => {

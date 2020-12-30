@@ -390,7 +390,7 @@ export interface OHLCSeriesTooltip extends SeriesTooltip {
 }
 
 export interface OHLCSeriesOptions extends BaseSeriesOptions {
-    type: 'ohlc';
+    type?: 'ohlc';
     dateKey?: string;
     openKey?: string;
     highKey?: string;
@@ -607,12 +607,13 @@ type CartesianSeriesOptions =
     ScatterSeriesOptions |
     AreaSeriesOptions |
     BarSeriesOptions |
-    HistogramSeriesOptions;
+    HistogramSeriesOptions |
+    OHLCSeriesOptions;
 
 type PolarSeriesOptions = PieSeriesOptions;
 
 export interface CartesianChartOptions<TAxisOptions = CartesianAxisOptions[], TSeriesOptions = CartesianSeriesOptions[]> extends BaseChartOptions {
-    type?: 'cartesian' | 'groupedCategory' | 'line' | 'bar' | 'column' | 'area' | 'scatter';
+    type?: 'cartesian' | 'groupedCategory' | 'line' | 'bar' | 'column' | 'area' | 'scatter' | 'ohlc';
     axes?: TAxisOptions;
     series?: TSeriesOptions;
 }

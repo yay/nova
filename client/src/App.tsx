@@ -6,6 +6,7 @@ import './App.css';
 import { AutoComplete, Row, Col, List, Button, Slider } from 'antd';
 import { Company, Quote } from "../../server/src/stock_i";
 import { ReactChart } from './charts/react';
+import { CartesianChartOptions } from './charts/chart/chartOptions';
 
 const { Option } = AutoComplete;
 
@@ -98,12 +99,9 @@ export const Watchlist: React.FC<{}> = (props) => {
                         position: 'left'
                     }],
                     series: [{
-                        type: 'line',
-                        xKey: 'date',
-                        yKey: 'close',
-                        marker: {
-                            enabled: false
-                        }
+                        type: 'ohlc',
+                        dateKey: 'date',
+                        closeKey: 'close'
                     }]
                 }} />
                 <List

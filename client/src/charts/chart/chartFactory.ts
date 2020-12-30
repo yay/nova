@@ -435,9 +435,15 @@ const enabledKey = 'enabled';
  */
 function provideDefaultOptions(path: string, options: any, mapping: any, theme?: ChartTheme): any {
     const isChartConfig = path.indexOf('.') < 0;
-    const themeDefaults = theme && theme.getConfig(path);
     const defaults = mapping && mapping.meta && mapping.meta.defaults;
     const isExplicitlyDisabled = options.enabled === false; // by the user
+
+    let themeDefaults: any;
+    try {
+        themeDefaults = theme && theme.getConfig(path);
+    } catch (e) {
+        themeDefaults = undefined;
+    }
 
     if (defaults || themeDefaults) {
         options = Object.create(options);

@@ -48,6 +48,7 @@ export class OHLCSeriesTooltip extends SeriesTooltip {
 export class OHLCSeries extends CartesianSeries {
 
     static className = 'OHLCSeries';
+    static type = 'ohlc';
 
     private xDomain: number[] = [];
     private yDomain: number[] = [];
